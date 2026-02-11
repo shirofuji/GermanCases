@@ -38,7 +38,7 @@ function getRandomNoun () {
 
 export function getNonRepeatingRandomNoun(lastNoun) {
     let noun = getRandomNoun()
-    while (noun == lastNoun) {
+    while (noun === lastNoun) {
         noun = getRandomNoun();
     }
 

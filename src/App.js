@@ -1,6 +1,6 @@
 import './App.css';
 import { getNonRepeatingRandomNoun, getImageForNoun } from './nouns';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
 function App() {
   const [noun, setNoun] = useState({});
@@ -11,18 +11,18 @@ function App() {
   const [imgUrl, setImgUrl] = useState('');
   const [learningMode, setLearningMode] = useState(true);
 
-  const cases = ['nominative','accusative','dative','genitive'];
+  const cases = useMemo(()=>(['nominative','accusative','dative','genitive']),[]);
 
-  function newNoun () {
+  const newNoun = useCallback(() => {
     setImgUrl('');
-    setNoun(getNonRepeatingRandomNoun(noun));
-  }
+    setNoun(prev => getNonRepeatingRandomNoun(prev)); // use prev state
+  }, []); // no dependencies
 
-  async function updateTestData () {
+  const updateTestData = useCallback(async () => {
     setImgUrl(await getImageForNoun(noun.noun));
     const randomIndex = Math.floor(Math.random() * cases.length);
-    setGermanCase(cases[randomIndex])
-  }
+    setGermanCase(cases[randomIndex]);
+  }, [noun, cases]);
 
   function handleCheck () {
     console.group("Test");
@@ -39,11 +39,11 @@ function App() {
 
   useEffect(()=>{
     newNoun()
-  },[])
+  },[newNoun])
 
   useEffect(()=>{
     updateTestData()
-  },[noun])
+  },[updateTestData])
 
   useEffect(()=>{
     setCorrectAnswer(noun[germancase])
@@ -86,8 +86,8 @@ function App() {
                 <div className="mt-6">
                   <label htmlFor="userAnswer">Enter the correct <strong>{germancase}</strong> form:</label>
                   <input type="text" name="userAnswer" className="border-1 border-solid w-[100%] bg-white rounded-md p-1" value={userAnswer} onChange={(e)=>{setUserAnswer(e.target.value)}}/>
-                  <p className={`text-center ${userAnswerStatus=='Correct!!'?'text-green-300':'text-red-500'}`}>{userAnswerStatus}</p>
-                  {userAnswerStatus != '' && (<p className="text-center">Correct Answer: <strong>{correctAnswer}</strong></p>)}
+                  <p className={`text-center ${userAnswerStatus==='Correct!!'?'text-green-300':'text-red-500'}`}>{userAnswerStatus}</p>
+                  {userAnswerStatus !== '' && (<p className="text-center">Correct Answer: <strong>{correctAnswer}</strong></p>)}
                 </div>
                 <div className="mt-6 flex justify-center">
                   <input type="submit" className="bg-green-300 hover:bg-green-400 rounded-md py-2 px-6 text-white cursor-pointer" value="Submit" onClick={handleCheck}/>

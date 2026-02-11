@@ -40,7 +40,7 @@ Unsplash API key (get it here
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/german-cases.git
+git clone https://github.com/shirofuji/GermanCases.git
 cd GermanCases
 ```
 

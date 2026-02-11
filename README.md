@@ -30,11 +30,8 @@ Responsive layout with Tailwind CSS styling.
 **Prerequisites**
 
 Node.js >= 18
-
 npm or yarn
-
-Unsplash API key (get it here
-)
+Unsplash API key (get it here)
 
 **Installation**
 
